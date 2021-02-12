@@ -21,5 +21,6 @@ BugReports: https://github.com/xuranw/MuSiC/issues
 VignetteBuilder: knitr
 RoxygenNote: 7.0.0
 Remotes: 
-        renozao/xbioc,
+        crhisto/Biobase,
+        crhisto/xbioc,
         shenorrlab/bseqsc
