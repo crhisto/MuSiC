@@ -319,6 +319,7 @@ music_Design.matrix = function(x, non.zero, markers, clusters, samples, select.c
 #' @export
 music_basis = function(x, non.zero = TRUE, markers = NULL, clusters, samples, select.ct = NULL, cell_size = NULL, ct.cov = FALSE, verbose = TRUE){
   if(!is.null(select.ct)){
+
     s.ct = sampleNames(x)[as.character(pVar(x, clusters)) %in% select.ct]
     x <- x[, s.ct, drop = FALSE]
   }
