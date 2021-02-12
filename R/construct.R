@@ -25,7 +25,7 @@ bulk_construct = function(eset, clusters, samples, select.ct = NULL){
   mdf = pData(eset)
   mdf$index = 1:ncol(eset);
   rdf <-ddply(mdf, samples, function(x){
-    rowSums(exprs(eset[, x$index]) )
+    Matrix:::rowSums(exprs(eset[, x$index]) )
   })
   bulk.counts = t(data.matrix(rdf[,-1]))
   colnames(bulk.counts) = rdf[,1]
@@ -69,7 +69,7 @@ music_M.theta = function(x, non.zero, markers, clusters, samples, select.ct){
     x <- x[, s.ct, drop = FALSE]
   }
   if(non.zero){  ## eliminate non expressed genes
-    nz.gene = rownames(x)[( rowSums(exprs(x)) != 0 )]
+    nz.gene = rownames(x)[( Matrix:::rowSums(exprs(x)) != 0 )]
     x <- x[nz.gene, , drop = FALSE]
   }
 
@@ -78,7 +78,7 @@ music_M.theta = function(x, non.zero, markers, clusters, samples, select.ct){
   M.theta <- sapply(unique(clusters), function(ct){
     my.rowMeans(sapply(unique(samples), function(sid){
       y = exprs(x)[,clusters %in% ct & samples %in% sid, drop = FALSE]
-      rowSums(y)/sum(y)
+      Matrix:::rowSums(y)/sum(y)
     }), na.rm = TRUE)
   })
 
@@ -114,7 +114,7 @@ music_Theta <- function(x, non.zero = FALSE, clusters, samples, select.ct = NULL
     x <- x[, s.ct, drop = FALSE]
   }
   if(non.zero){
-    nz.gene = rownames(x)[(rowSums(exprs(x)) != 0)]
+    nz.gene = rownames(x)[(Matrix:::rowSums(exprs(x)) != 0)]
     x <- x[nz.gene, , drop = FALSE]
   }
   nGenes = nrow(x);
@@ -124,7 +124,7 @@ music_Theta <- function(x, non.zero = FALSE, clusters, samples, select.ct = NULL
   Theta <- sapply(unique(clusters), function(ct){
     sapply(unique(samples), function(sid){
       y = exprs(x)[,clusters %in% ct & samples %in% sid, drop = FALSE]
-      rowSums(y)/sum(y)
+      Matrix:::rowSums(y)/sum(y)
     })
   })
   n.ct = length(unique(clusters));
@@ -156,7 +156,7 @@ music_Sigma.ct = function(x, non.zero, markers, clusters, samples, select.ct){
     x <- x[, s.ct, drop = FALSE]
   }
   if(non.zero){  ## eliminate non expressed genes
-    nz.gene = rownames(x)[( rowSums(exprs(x)) != 0 )]
+    nz.gene = rownames(x)[( Matrix:::rowSums(exprs(x)) != 0 )]
     x <- x[nz.gene, , drop = FALSE]
   }
   nGenes = nrow(x);
@@ -166,7 +166,7 @@ music_Sigma.ct = function(x, non.zero, markers, clusters, samples, select.ct){
   Sigma <- sapply(unique(clusters), function(ct){
     sapply(unique(samples), function(sid){
       y = exprs(x)[,clusters %in% ct & samples %in% sid, drop = FALSE]
-      rowSums(y)/sum(y)
+      Matrix:::rowSums(y)/sum(y)
     })
   })
   n.sub = length(unique(samples));
@@ -203,7 +203,7 @@ music_Sigma = function(x, non.zero, markers, clusters, samples, select.ct){
     x <- x[, s.ct, drop = FALSE]
   }
   if(non.zero){  ## eliminate non expressed genes
-    nz.gene = rownames(x)[( rowSums(exprs(x)) != 0 )]
+    nz.gene = rownames(x)[( Matrix:::rowSums(exprs(x)) != 0 )]
     x <- x[nz.gene, , drop = FALSE]
   }
 
@@ -212,7 +212,7 @@ music_Sigma = function(x, non.zero, markers, clusters, samples, select.ct){
   Sigma <- sapply(unique(clusters), function(ct){
     apply(sapply(unique(samples), function(sid){
       y = exprs(x)[,clusters %in% ct & samples %in% sid, drop = FALSE]
-      rowSums(y)/sum(y)
+      Matrix:::rowSums(y)/sum(y)
     }), 1, var, na.rm = TRUE)
   })
 
@@ -247,7 +247,7 @@ music_S = function(x, non.zero, clusters, samples, select.ct){
     x <- x[, s.ct, drop = FALSE]
   }
   if(non.zero){  ## eliminate non expressed genes
-    nz.gene = rownames(x)[( rowSums(exprs(x)) != 0 )]
+    nz.gene = rownames(x)[( Matrix:::rowSums(exprs(x)) != 0 )]
     x <- x[nz.gene, , drop = FALSE]
   }
 
@@ -324,7 +324,7 @@ music_basis = function(x, non.zero = TRUE, markers = NULL, clusters, samples, se
     x <- x[, s.ct, drop = FALSE]
   }
   if(non.zero){  ## eliminate non expressed genes
-    nz.gene = rownames(x)[( rowSums(exprs(x)) != 0 )]
+    nz.gene = rownames(x)[( Matrix:::rowSums(exprs(x)) != 0 )]
     x <- x[nz.gene, , drop = FALSE]
   }
 
@@ -334,7 +334,7 @@ music_basis = function(x, non.zero = TRUE, markers = NULL, clusters, samples, se
   M.theta <- sapply(unique(clusters), function(ct){
     my.rowMeans(sapply(unique(samples), function(sid){
       y = exprs(x)[,clusters %in% ct & samples %in% sid, drop = FALSE]
-      rowSums(y)/sum(y)
+      Matrix:::rowSums(y)/sum(y)
     }), na.rm = TRUE)
   })
   if(verbose){message("Creating Relative Abudance Matrix...")}
@@ -346,7 +346,7 @@ music_basis = function(x, non.zero = TRUE, markers = NULL, clusters, samples, se
     Theta <- sapply(unique(clusters), function(ct){
       sapply(unique(samples), function(sid){
         y = exprs(x)[,clusters %in% ct & samples %in% sid, drop = FALSE]
-        return( rowSums(y)/sum(y) )
+        return( Matrix:::rowSums(y)/sum(y) )
       })
     })
     if(!is.null(select.ct)){
@@ -357,7 +357,7 @@ music_basis = function(x, non.zero = TRUE, markers = NULL, clusters, samples, se
     Sigma.ct = sapply(1:nGenes, function(g){
       sigma.temp = Theta[nGenes*(0:(nSubs - 1)) + g, ];
       Cov.temp = cov(sigma.temp)
-      Cov.temp1 = cov(sigma.temp[rowSums(is.na(Theta[nGenes*(0:(nSubs - 1)) + 1, ])) == 0, ])
+      Cov.temp1 = cov(sigma.temp[Matrix:::rowSums(is.na(Theta[nGenes*(0:(nSubs - 1)) + 1, ])) == 0, ])
       Cov.temp[which(colSums(is.na(sigma.temp))>0), ] = Cov.temp1[which(colSums(is.na(sigma.temp))>0), ]
       Cov.temp[, which(colSums(is.na(sigma.temp))>0)] = Cov.temp1[, which(colSums(is.na(sigma.temp))>0)]
       return(Cov.temp)
@@ -374,7 +374,7 @@ music_basis = function(x, non.zero = TRUE, markers = NULL, clusters, samples, se
     Sigma <- sapply(unique(clusters), function(ct){
       apply(sapply(unique(samples), function(sid){
         y = exprs(x)[,clusters %in% ct & samples %in% sid, drop = FALSE]
-        rowSums(y)/sum(y)
+        Matrix:::rowSums(y)/sum(y)
       }), 1, var, na.rm = TRUE)
     })
     if(!is.null(select.ct)){

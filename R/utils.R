@@ -14,9 +14,9 @@ relative.ab = function(X, by.col = TRUE){
     stop('Negative entry appears!')
   }
   if(by.col == T){
-    RX = sweep(X, 2, colSums(X), '/')
+    RX = sweep(X, 2, Matrix:::colSums(X), '/')
   }else{
-    RX = sweep(X, 1, rowSums(X), '/')
+    RX = sweep(X, 1, Matrix:::rowSums(X), '/')
   }
   return(RX)
 }
@@ -119,7 +119,7 @@ get_upper_tri = function(cormat){
 #' @export
 music_prop = function(bulk.eset, sc.eset, markers = NULL, clusters, samples, select.ct = NULL, cell_size = NULL, ct.cov = FALSE, verbose = TRUE,
                       iter.max = 1000, nu = 0.0001, eps = 0.01, centered = FALSE, normalize = FALSE, ... ){
-  bulk.gene = rownames(bulk.eset)[rowMeans(exprs(bulk.eset)) != 0]
+  bulk.gene = rownames(bulk.eset)[Matrix:::rowMeans(exprs(bulk.eset)) != 0]
   bulk.eset = bulk.eset[bulk.gene, , drop = FALSE]
   if(is.null(markers)){
     sc.markers = bulk.gene
@@ -187,7 +187,7 @@ music_prop = function(bulk.eset, sc.eset, markers = NULL, clusters, samples, sel
   }else{
     Sigma = sc.basis$Sigma[m.sc, ];
 
-    valid.ct = (colSums(is.na(Sigma)) == 0)&(colSums(is.na(D1)) == 0)&(!is.na(M.S))
+    valid.ct = (Matrix:::colSums(is.na(Sigma)) == 0)&(Matrix:::colSums(is.na(D1)) == 0)&(!is.na(M.S))
 
     if(sum(valid.ct)<=1){
       stop("Not enough valid cell type!")
@@ -378,7 +378,7 @@ Anova_info = function(eset, non.zero = TRUE, markers = NULL, clusters, samples, 
     message(paste('Selected', length(select.ct), 'cell type(s) ...' ))
   }
   if(non.zero){  ## eliminate non expressed genes
-    nz.gene = rownames(eset)[( rowSums(exprs(eset)) != 0 )]
+    nz.gene = rownames(eset)[( Matrix:::rowSums(exprs(eset)) != 0 )]
     eset <- eset[nz.gene, , drop = FALSE]
     message(paste('Eliminating non expressed gene(s) ...' ))
   }

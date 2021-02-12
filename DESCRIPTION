@@ -13,7 +13,8 @@ Imports:
         plyr,
         xbioc, 
         Biobase, 
-        MCMCpack
+        MCMCpack,
+        Matrix
 Suggests:
     bseqsc
 URL: https://github.com/xuranw/MuSiC
